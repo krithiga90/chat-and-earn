@@ -10,6 +10,29 @@ var users = require('./routes/users');
 
 var app = express();
 
+///////// - logic to open a socket connection
+var http = require('http').Server(express);
+var io = require('socket.io')(http);
+app.get('/', function(req, res){
+  //We are writing the response
+  //res.send('<h1>Hello world</h1>');
+  res.sendFile(__dirname + '/index.html');
+});
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+  });
+  // socket.on('disconnect', function(){
+  //   console.log('user disconnected');
+  // });
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+//////////
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
